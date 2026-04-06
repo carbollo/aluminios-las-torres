@@ -1,10 +1,12 @@
 FROM nginx:alpine
 
-# Copiar los archivos de la web al directorio que Nginx usa para servir contenido estático
-COPY . /usr/share/nginx/html
+# Railway inyecta PORT en runtime; valor por defecto para local.
+ENV PORT=8080
 
-# Exponer el puerto 80
-EXPOSE 80
+# Servir solo el sitio estatico.
+COPY index.html /usr/share/nginx/html/index.html
 
-# Iniciar Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Nginx oficial hace envsubst de templates en /etc/nginx/templates.
+COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
+
+EXPOSE 8080
